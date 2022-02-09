@@ -1,68 +1,71 @@
-@@ -0,0 +1,61 @@
 #include <SPI.h>
 #include <MFRC522.h>
 int LEDR = 3;
-int LEDV = 4;
+int LEDG = 4;
 
-#define RST_PIN  9    //Pin 9 para el reset del RC522
-#define SS_PIN  10   //Pin 10 para el SS (SDA) del RC522
-MFRC522 mfrc522(SS_PIN, RST_PIN); ///Creamos el objeto para el RC522
+#define RST_PIN  9    // sets pin 9 for reseting the RC522
+#define SS_PIN  10   // sets pin 10 for SS (SDA) of the RC522
+MFRC522 mfrc522(SS_PIN, RST_PIN); // create the RC522 object
+
 
 void setup() {
-  Serial.begin(9600); //Iniciamos La comunicacion serial
-  SPI.begin();        //Iniciamos el Bus SPI
-  mfrc522.PCD_Init(); // Iniciamos el MFRC522
-  pinMode(LEDR, OUTPUT);   //Declaramos el pin digital 3 como salida
-    pinMode(LEDV, OUTPUT);   //Declaramos el pin digital 4 como salida 
-    digitalWrite (LEDR , HIGH);  //Definimos la salida digital 3 con un estado bajo
-    digitalWrite (LEDV , LOW);  //Definimos la salida digital 4 con un estado bajo
+  Serial.begin(9600); //begin the serial com
+  SPI.begin();        //iniciate the SPI bus
+  mfrc522.PCD_Init(); // Iniciate the RC522 
+  pinMode(LEDR, OUTPUT);   // set pin 3 as output
+    pinMode(LEDG, OUTPUT);   // set pin 4 as output  
+    digitalWrite (LEDR , HIGH);  // set pin 3 output as HIGH
+    digitalWrite (LEDG , LOW);  // set pin 4 output as LOW
   Serial.println("Control de acceso:");
 }
 
-byte ActualUID[4]; //almacenará el código del Tag leído
-byte Usuario1[4]= {0xD9, 0x84, 0xc4, 0x98} ; //código del usuario 1
-byte Usuario2[4]= {0x49, 0x1A, 0x91, 0x0E} ; //código del usuario 2 09:48:06.531 -> Card UID: D9 84 C4 98
-//09:48:15.878 -> Card UID: 49 1A 91 6E
+byte ActualUID[4]; // stores the RFID tag ID number
+byte Usuario1[4]= {0xD9, 0x84, 0xc4, 0x98} ; // ID of User1 
+byte Usuario2[4]= {0x49, 0x1A, 0x91, 0x0E} ; // ID of User2
 
 void loop() {
 
-  // Revisamos si hay nuevas tarjetas  presentes
+  // Start decting if new card is near the RFID chip
   if ( mfrc522.PICC_IsNewCardPresent()) 
         {  
-      //Seleccionamos una tarjeta
+      //select a card ID
             if ( mfrc522.PICC_ReadCardSerial()) 
             {
-                  // Enviamos serialemente su UID
+                  // send the card IUD 
                   Serial.print(F("Card UID:"));
                   for (byte i = 0; i < mfrc522.uid.size; i++) {
                           Serial.print(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " ");
                           Serial.print(mfrc522.uid.uidByte[i], HEX);   
-                          ActualUID[i]=mfrc522.uid.uidByte[i];          
+                          ActualUID[i]=mfrc522.uid.uidByte[i];              
                   } 
                   Serial.print("     ");                 
-                  //comparamos los UID para determinar si es uno de nuestros usuarios  
+                  //compare IUD for matches in the Users   
                   if(compareArray(ActualUID,Usuario1))
-                    Serial.println("Acceso concedido...");
-                     digitalWrite (LEDV , HIGH);     //Si el sensor detecta una distancia menor a 20 cm enciende el LED Rojo
-                     digitalWrite (LEDR , LOW);      // y apaga el verde    
-                     delay (2000); // espera dos segundos
-                     digitalWrite (LEDR , HIGH); // enciende led rojo
-                     digitalWrite (LEDV , LOW); // apaga el led verde
+                    {
+                     Serial.println("Acceso concedido...");
+                     digitalWrite (LEDG , HIGH);     //If ID correct, sets LEDG as HIGH 
+                     digitalWrite (LEDR , LOW);      //and LEDR as low  
+                     delay (2000); // waits 2s
+                     digitalWrite (LEDR , HIGH); //set LEDR as HIGH
+                     digitalWrite (LEDG , LOW); //set LEDG as LOW 
+                    }
                   else if(compareArray(ActualUID,Usuario2))
-                    Serial.println("Acceso concedido...");
-                    digitalWrite (LEDG , HIGH);     // if ID correct, activates LEDG
-                     digitalWrite (LEDR , LOW);      // and deactivates LEDR   
-                     delay (2000); // espera dos segundos
-                     digitalWrite (LEDR , HIGH); // enciende led rojo
-                     digitalWrite (LEDV , LOW); // apaga el led verde
+                   {
+                     Serial.println("Acceso concedido...");
+                     digitalWrite (LEDG , HIGH);     //If ID correct, sets LEDG as HIGH 
+                     digitalWrite (LEDR , LOW);      //and LEDR as low  
+                     delay (2000); // waits 2s
+                     digitalWrite (LEDR , HIGH); //set LEDR as HIGH
+                     digitalWrite (LEDG , LOW); //set LEDG as LOW
+                   }
                   else
-                    Serial.println("Acceso denegado...");
+                   { Serial.println("Acceso denegado..."); // If ID incorrect
                       for (int i = 0; i < 4; i++); 
                       digitalWrite(LEDR,HIGH);
                       delay(1000);
-                      digitalWrite(LEDR,LOW); // enciende y apaga el led rojo 4 veces
-
-                  // Terminamos la lectura de la tarjeta tarjeta  actual
+                      digitalWrite(LEDR,LOW); // LEDR blinks 4 times 
+                    }
+                    // finish the actual tag reading 
                   mfrc522.PICC_HaltA();
 
             }
@@ -71,7 +74,7 @@ void loop() {
 
 }
 
-//Función para comparar dos vectores
+//function for cheking ID
  boolean compareArray(byte array1[],byte array2[])
 {
   if(array1[0] != array2[0])return(false);
