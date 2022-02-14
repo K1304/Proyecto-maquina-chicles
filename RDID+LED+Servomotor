@@ -21,7 +21,7 @@ void setup()
     pinMode (LEDG, OUTPUT);   // set pin 4 as output  
     digitalWrite (LEDR , HIGH);  // set pin 3 output as HIGH
     digitalWrite (LEDG , LOW);  // set pin 4 output as LOW
-  Serial.println ("Control de acceso:");
+  Serial.println ("Access Control:");
   servoMotor.attach (5); //define servo pin as 5
   servoMotor.write (0) // set servo position as 0º
 }
@@ -56,7 +56,7 @@ void loop()
 
                   if(compareArray(ActualUID,Usuario1))
                     {
-                     Serial.println ("Acceso concedido...");
+                     Serial.println ("Access Granted User 1");
                      digitalWrite (LEDG , HIGH);     //If ID correct, sets LEDG as HIGH 
                      digitalWrite (LEDR , LOW);      //and LEDR as low  
                      servoMotor.write(90);           // moves the servo 90 degrees
@@ -68,7 +68,7 @@ void loop()
 
                   else if(compareArray(ActualUID,Usuario2))
                    {
-                      Serial.println ("Acceso concedido...");
+                      Serial.println ("Access Granted User 2");
                      digitalWrite (LEDG , HIGH);     //If ID correct, sets LEDG as HIGH 
                      digitalWrite (LEDR , LOW);      //and LEDR as low  
                      servoMotor.write(90);
@@ -80,10 +80,21 @@ void loop()
 
                   else
                    { 
-                     Serial.println("Acceso denegado..."); // If ID incorrect
-                     for (int i = 0; i < 4; i++); 
+                     Serial.println("Access Denied User..."); // If ID incorrect
+                      digitalWrite(LEDR,HIGH);
+                     delay(500);
+                     digitalWrite(LEDR,LOW);
+                     delay(500);
+                      digitalWrite(LEDR,HIGH);
+                     delay(500);
+                     digitalWrite(LEDR,LOW);
+                     delay(500);
+                      digitalWrite(LEDR,HIGH);
+                     delay(500);
+                     digitalWrite(LEDR,LOW);
+                     delay(500);
                      digitalWrite(LEDR,HIGH);
-                     delay(1000);
+                     delay(500);
                      digitalWrite(LEDR,LOW); // LEDR blinks 4 times 
                     }
 
