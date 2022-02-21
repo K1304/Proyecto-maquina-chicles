@@ -1,4 +1,3 @@
-//https://naylampmechatronics.com/blog/22_tutorial-modulo-lector-rfid-rc522.html
 #include <SPI.h>
 #include <MFRC522.h>
 
