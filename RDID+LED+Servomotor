@@ -23,7 +23,7 @@ void setup()
     digitalWrite (LEDG , LOW);  // set pin 4 output as LOW
   Serial.println ("Access Control:");
   servoMotor.attach (5); //define servo pin as 5
-  servoMotor.write (0) // set servo position as 0º
+  servoMotor.write (0); // set servo position as 0º
 }
 
 byte ActualUID[4]; // stores the RFID tag ID number
@@ -81,21 +81,13 @@ void loop()
                   else
                    { 
                      Serial.println("Access Denied User..."); // If ID incorrect
-                      digitalWrite(LEDR,HIGH);
-                     delay(500);
-                     digitalWrite(LEDR,LOW);
-                     delay(500);
-                      digitalWrite(LEDR,HIGH);
-                     delay(500);
-                     digitalWrite(LEDR,LOW);
-                     delay(500);
-                      digitalWrite(LEDR,HIGH);
-                     delay(500);
-                     digitalWrite(LEDR,LOW);
-                     delay(500);
-                     digitalWrite(LEDR,HIGH);
-                     delay(500);
-                     digitalWrite(LEDR,LOW); // LEDR blinks 4 times 
+                     for (int i = 0; i < 4; ++i)
+                     {
+                       digitalWrite(LEDR,HIGH);
+                       delay(500);
+                       digitalWrite(LEDR,LOW);
+                       delay(500);
+                     }
                     }
 
                     
