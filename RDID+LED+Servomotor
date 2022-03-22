@@ -22,7 +22,7 @@ void setup()
     digitalWrite (LEDR , HIGH);  // set pin 3 output as HIGH
     digitalWrite (LEDG , LOW);  // set pin 4 output as LOW
   Serial.println ("Access Control:");
-  servoMotor.attach (5); //define servo pin as 5
+  servoMotor.attach (2); //define servo pin as 2
   servoMotor.write (90); // set servo position as 0º
 }
 
