@@ -1,8 +1,8 @@
 #include <SPI.h>
 #include <MFRC522.h>
 #include <Servo.h>
-int LEDR = 3;
-int LEDG = 4;
+int LEDG = 3;
+int LEDR = 4;
 
 Servo servoMotor;
 
